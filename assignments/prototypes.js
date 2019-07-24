@@ -34,13 +34,13 @@ GameObject.prototype.destroy = function() {
 */
 
 function CharacterStats(stats) {
-  this.healthpoints = stats.healthpoints;
+  this.healthPoints = stats.healthPoints;
   GameObject.call(this, stats);
 }
 
 CharacterStats.prototype = Object.create(GameObject.prototype);
   
-CharacterStats.prototype.takesDamage = function() {
+CharacterStats.prototype.takeDamage = function() {
   return `${this.name} took damage.`;
 };
 
@@ -58,14 +58,12 @@ function Humanoid(features) {
   this.team = features.team;
   this.weapons = features.team;
   this.language = features.language;
-  GameObject.call(this, features);
   CharacterStats.call(this, features);
 }
 
 Humanoid.prototype = Object.create(CharacterStats.prototype);
-Humanoid.prototype = Object.create(GameObject.prototype);
 
-Humanoid,prototype.greet = function() {
+Humanoid.prototype.greet = function() {
    return `${this.name} offers a greeting in ${this.language}`;
 };
 
@@ -142,5 +140,74 @@ Humanoid,prototype.greet = function() {
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
+
+function Hero(honor) {
+  Humanoid.call(this, honor);
+} 
+
+function Villain (dishonor) {
+  Humanoid.call(this, dishonor);
+}
+
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
+
+Hero.prototype = Object.create(Humanoid.prototype);
+
+Hero.prototype.killed = function() {
+  if (healthPoints <= 0) {
+    return `${this.name} is dead.`
+  }
+}
+
+Villain.prototype = Object.create(Humanoid.prototype);
+
+Villain.prototype.horcruxed = function() {
+  if (this.healthPoints <= 0) {
+    console.log(`${this.name} has been vanquished!`);
+    return Villain.destroy();
+  }
+  else {
+    return `${this.name} lives!`
+  }
+}
+
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+  const harryPotter = new Hero({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 2,
+    },
+    healthPoints: 10,
+    name: 'Harry Potter',
+    team: 'Gryffindor',
+    weapons: [
+      'Sword of Gryffindor',
+      'Elder Wand',
+    ],
+    language: 'Common Tongue',
+  });
+
+  const voldemort = new Villain({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 6,
+    },
+    healthPoints: 500,
+    name: 'He Who Shall Not Be Named',
+    team: 'Slytherin',
+    weapons: [
+      'wand',
+    ],
+    language: 'Parsel Tongue',
+  });
+
+  console.log(harryPotter.createdAt);
+  console.log(voldemort.createdAt);
+  console.log(voldemort.takeDamage());
+  console.log(voldemort.healthPoints);
+  console.log(voldemort.horcruxed());
